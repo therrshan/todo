@@ -59,6 +59,28 @@
             color: #667eea;
         }
 
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+            margin-left: 20px;
+        }
+
+        .view-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            background: #f1f5f9;
+            color: #666;
+            text-decoration: none;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -266,6 +288,45 @@
             font-size: 12px;
         }
 
+        /* Tab Styles */
+        .tabs {
+            display: flex;
+            margin-bottom: 25px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 4px;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #666;
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .tab-button:hover:not(.active) {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
         .todo-list {
             space-y: 15px;
         }
@@ -288,7 +349,7 @@
         .todo-item.completed {
             background: #f0f9ff;
             border-color: #10b981;
-            opacity: 0.7;
+            opacity: 0.8;
         }
 
         .todo-item.overdue {
@@ -380,6 +441,156 @@
         .todo-actions {
             display: flex;
             gap: 10px;
+        }
+
+        /* Subtask Styles */
+        .subtasks-container {
+            margin: 15px 0;
+            background: rgba(248, 249, 250, 0.8);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .subtasks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .subtasks-title {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .progress-bar {
+            width: 60px;
+            height: 4px;
+            background: #e8e8e8;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #10b981;
+            transition: width 0.3s ease;
+        }
+
+        .subtask-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: white;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .subtask-item:hover {
+            background: #f8f9fa;
+        }
+
+        .subtask-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .subtask-checkbox.checked {
+            background: #10b981;
+            border-color: #10b981;
+            color: white;
+        }
+
+        .subtask-title {
+            flex: 1;
+            font-size: 0.9em;
+        }
+
+        .subtask-title.completed {
+            text-decoration: line-through;
+            color: #666;
+        }
+
+        .add-subtask-form {
+            display: none;
+            margin-top: 10px;
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            border: 2px dashed #e8e8e8;
+        }
+
+        .add-subtask-form.show {
+            display: block;
+        }
+
+        .add-subtask-form input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+
+        .subtask-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-xs {
+            padding: 4px 8px;
+            font-size: 11px;
+        }
+
+        /* Keyboard shortcuts help */
+        .keyboard-shortcuts {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .keyboard-shortcuts.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .keyboard-shortcuts h4 {
+            margin-bottom: 10px;
+        }
+
+        .shortcut-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            gap: 15px;
+        }
+
+        .shortcut-key {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
         }
 
         .alert {
@@ -514,6 +725,13 @@
             <div class="logo">📋 Todo Dashboard</div>
             <nav class="nav-links">
                 <a href="{{ url_for('categories') }}">Categories</a>
+                <a href="{{ url_for('settings') }}">Settings</a>
+                <div class="view-toggle">
+                    <a href="{{ url_for('dashboard', tab=current_tab or 'active', view='list') }}" 
+                       class="view-btn {% if not current_view or current_view == 'list' %}active{% endif %}">📋 List</a>
+                    <a href="{{ url_for('dashboard', tab=current_tab or 'active', view='calendar') }}" 
+                       class="view-btn {% if current_view == 'calendar' %}active{% endif %}">📅 Calendar</a>
+                </div>
                 <a href="{{ url_for('logout') }}">Logout</a>
             </nav>
         </div>
@@ -552,6 +770,24 @@
 
         <div class="main-content">
             <div class="todo-section">
+                <!-- Tabs -->
+                <div class="tabs">
+                    <a href="{{ url_for('dashboard', tab='active') }}" class="tab-button {% if current_tab == 'active' or not current_tab %}active{% endif %}">
+                        ⚡ Active Tasks
+                        {% if stats.pending > 0 %}
+                            <span style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 10px; font-size: 11px;">{{ stats.pending }}</span>
+                        {% endif %}
+                    </a>
+                    <a href="{{ url_for('dashboard', tab='completed') }}" class="tab-button {% if current_tab == 'completed' %}active{% endif %}">
+                        ✅ Completed
+                        {% if stats.completed > 0 %}
+                            <span style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 10px; font-size: 11px;">{{ stats.completed }}</span>
+                        {% endif %}
+                    </a>
+                </div>
+
+                <!-- Add Todo Form (only show on active tab) -->
+                {% if current_tab == 'active' or not current_tab %}
                 <div class="section-header">
                     <h2 class="section-title">Add New Todo</h2>
                     <button type="button" class="btn-plus" onclick="toggleAddForm()">
@@ -599,8 +835,16 @@
                         </div>
                     </div>
                 </form>
+                {% endif %}
 
-                <h2 class="section-title">Your Todos</h2>
+                <!-- Todo List -->
+                <h2 class="section-title">
+                    {% if current_tab == 'completed' %}
+                        Completed Tasks
+                    {% else %}
+                        Your Active Tasks
+                    {% endif %}
+                </h2>
                 <div class="todo-list">
                     {% if todos %}
                         {% for todo in todos %}
@@ -625,25 +869,88 @@
                                         </span>
                                     {% endif %}
                                     <span>📅 Created: {{ todo.created_at[:10] }}</span>
+                                    {% if todo.completed %}
+                                        <span>✅ Completed: {{ todo.updated_at[:10] }}</span>
+                                    {% endif %}
                                 </div>
                                 
                                 {% if todo.description %}
                                     <div class="todo-description">{{ todo.description }}</div>
                                 {% endif %}
                                 
+                                <!-- Subtasks -->
+                                {% if todo.subtasks %}
+                                    <div class="subtasks-container">
+                                        <div class="subtasks-header">
+                                            <span class="subtasks-title">Subtasks ({{ todo.subtasks|selectattr('completed')|list|length }}/{{ todo.subtasks|length }})</span>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: {{ todo.subtask_progress }}%"></div>
+                                            </div>
+                                        </div>
+                                        {% for subtask in todo.subtasks %}
+                                            <div class="subtask-item">
+                                                <div class="subtask-checkbox {% if subtask.completed %}checked{% endif %}" 
+                                                     onclick="window.location.href='{{ url_for('toggle_subtask', subtask_id=subtask.id) }}'">
+                                                    {% if subtask.completed %}✓{% endif %}
+                                                </div>
+                                                <div class="subtask-title {% if subtask.completed %}completed{% endif %}">{{ subtask.title }}</div>
+                                                <div class="subtask-actions">
+                                                    <a href="{{ url_for('delete_subtask', subtask_id=subtask.id) }}" 
+                                                       class="btn btn-danger btn-xs" 
+                                                       onclick="return confirm('Delete subtask?')">×</a>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                        {% if not todo.completed %}
+                                            <button class="btn btn-secondary btn-sm" onclick="toggleSubtaskForm({{ todo.id }})">+ Add Subtask</button>
+                                            <form method="POST" action="{{ url_for('add_subtask', todo_id=todo.id) }}" 
+                                                  class="add-subtask-form" id="subtask-form-{{ todo.id }}">
+                                                <input type="text" name="title" placeholder="New subtask..." required>
+                                                <div style="display: flex; gap: 5px;">
+                                                    <button type="submit" class="btn btn-success btn-xs">Add</button>
+                                                    <button type="button" class="btn btn-secondary btn-xs" onclick="toggleSubtaskForm({{ todo.id }})">Cancel</button>
+                                                </div>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                {% elif not todo.completed %}
+                                    <div class="subtasks-container">
+                                        <button class="btn btn-secondary btn-sm" onclick="toggleSubtaskForm({{ todo.id }})">+ Add Subtasks</button>
+                                        <form method="POST" action="{{ url_for('add_subtask', todo_id=todo.id) }}" 
+                                              class="add-subtask-form" id="subtask-form-{{ todo.id }}">
+                                            <input type="text" name="title" placeholder="First subtask..." required>
+                                            <div style="display: flex; gap: 5px;">
+                                                <button type="submit" class="btn btn-success btn-xs">Add</button>
+                                                <button type="button" class="btn btn-secondary btn-xs" onclick="toggleSubtaskForm({{ todo.id }})">Cancel</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                {% endif %}
+                                
                                 <div class="todo-actions">
-                                    <a href="{{ url_for('edit_todo', todo_id=todo.id) }}" class="btn btn-secondary btn-sm">Edit</a>
+                                    <a href="{{ url_for('todo_detail', todo_id=todo.id) }}" class="btn btn-primary btn-sm">📝 Details</a>
+                                    {% if not todo.completed %}
+                                        <a href="{{ url_for('edit_todo', todo_id=todo.id) }}" class="btn btn-secondary btn-sm">Edit</a>
+                                    {% endif %}
                                     <a href="{{ url_for('delete_todo', todo_id=todo.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this todo?')">Delete</a>
                                 </div>
                             </div>
                         {% endfor %}
                     {% else %}
                         <div class="empty-state">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z"/>
-                            </svg>
-                            <h3>No todos yet</h3>
-                            <p>Add your first todo above to get started!</p>
+                            {% if current_tab == 'completed' %}
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z"/>
+                                </svg>
+                                <h3>No completed tasks yet</h3>
+                                <p>Complete some tasks to see them here!</p>
+                            {% else %}
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z"/>
+                                </svg>
+                                <h3>No active todos</h3>
+                                <p>Add your first todo above to get started!</p>
+                            {% endif %}
                         </div>
                     {% endif %}
                 </div>
@@ -654,8 +961,9 @@
                     <h3>Quick Actions</h3>
                     <div class="action-buttons">
                         <a href="{{ url_for('categories') }}" class="btn btn-secondary">Manage Categories</a>
-                        {% if stats.completed > 0 %}
-                            <a href="{{ url_for('clear_completed') }}" class="btn btn-danger" onclick="return confirm('Clear all completed todos?')">Clear Completed</a>
+                        <a href="{{ url_for('settings') }}" class="btn btn-secondary">📧 Email Settings</a>
+                        {% if current_tab == 'completed' and stats.completed > 0 %}
+                            <button class="btn btn-danger" onclick="if(confirm('Permanently delete all completed tasks?')) window.location.href='{{ url_for('dashboard') }}?delete_completed=true'">🗑️ Delete All Completed</button>
                         {% endif %}
                     </div>
                 </div>
@@ -663,7 +971,104 @@
         </div>
     </div>
 
+    <!-- Keyboard Shortcuts Help -->
+    <div class="keyboard-shortcuts" id="shortcuts-help">
+        <h4>⌨️ Keyboard Shortcuts</h4>
+        <div class="shortcut-item">
+            <span>Add new task</span>
+            <span class="shortcut-key">Alt + N</span>
+        </div>
+        <div class="shortcut-item">
+            <span>Toggle task complete</span>
+            <span class="shortcut-key">Alt + Enter</span>
+        </div>
+        <div class="shortcut-item">
+            <span>Close forms/dialogs</span>
+            <span class="shortcut-key">Escape</span>
+        </div>
+        <div class="shortcut-item">
+            <span>Show/hide shortcuts</span>
+            <span class="shortcut-key">?</span>
+        </div>
+    </div>
+
     <script>
+        let selectedTodoId = null;
+        let shortcutsVisible = false;
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Don't trigger shortcuts when typing in input fields
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                if (e.key === 'Escape') {
+                    e.target.blur();
+                    toggleAddForm();
+                }
+                return;
+            }
+
+            // Alt + N - Add new task
+            if (e.altKey && e.key === 'n') {
+                e.preventDefault();
+                const addForm = document.getElementById('add-todo-form');
+                if (addForm && addForm.style.display === 'none') {
+                    toggleAddForm();
+                }
+                const taskInput = document.getElementById('task');
+                if (taskInput) taskInput.focus();
+            }
+
+            // Alt + Enter - Toggle first task complete (or selected task)
+            if (e.altKey && e.key === 'Enter') {
+                e.preventDefault();
+                const firstCheckbox = document.querySelector('.todo-checkbox');
+                if (firstCheckbox) {
+                    firstCheckbox.click();
+                }
+            }
+
+            // Escape - Close forms
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                const addForm = document.getElementById('add-todo-form');
+                if (addForm && addForm.classList.contains('show')) {
+                    toggleAddForm();
+                }
+                // Close any open subtask forms
+                document.querySelectorAll('.add-subtask-form.show').forEach(form => {
+                    form.classList.remove('show');
+                });
+            }
+
+            // ? - Show/hide shortcuts help
+            if (e.key === '?' || e.key === '/') {
+                e.preventDefault();
+                toggleShortcutsHelp();
+            }
+        });
+
+        function toggleShortcutsHelp() {
+            const help = document.getElementById('shortcuts-help');
+            shortcutsVisible = !shortcutsVisible;
+            help.classList.toggle('show', shortcutsVisible);
+            
+            if (shortcutsVisible) {
+                setTimeout(() => {
+                    help.classList.remove('show');
+                    shortcutsVisible = false;
+                }, 5000); // Auto-hide after 5 seconds
+            }
+        }
+
+        function toggleSubtaskForm(todoId) {
+            const form = document.getElementById(`subtask-form-${todoId}`);
+            form.classList.toggle('show');
+            if (form.classList.contains('show')) {
+                const input = form.querySelector('input[name="title"]');
+                if (input) input.focus();
+            }
+        }
+
         // Close alert function
         function closeAlert(alertId) {
             const alert = document.getElementById(alertId);
@@ -675,7 +1080,6 @@
             }
         }
 
-
         // Auto-hide success messages after 3 seconds
         document.addEventListener('DOMContentLoaded', function() {
             const alerts = document.querySelectorAll('.alert');
@@ -683,12 +1087,10 @@
             alerts.forEach(alert => {
                 setTimeout(() => {
                     alert.classList.add('fade-out');
-
-                    // Wait for animation duration (300ms) to complete before removing
                     alert.addEventListener('animationend', () => {
                         alert.remove();
                     });
-                }, 3000); // show for 3s before fading
+                }, 3000);
             });
 
             // Set minimum date to today for due date input
@@ -697,8 +1099,12 @@
                 const today = new Date().toISOString().split('T')[0];
                 dueDateInput.min = today;
             }
-        });
 
+            // Show shortcuts help on first load
+            setTimeout(() => {
+                toggleShortcutsHelp();
+            }, 1000);
+        });
 
         // Toggle add todo form
         function toggleAddForm() {

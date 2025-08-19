@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Settings - Todo App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .back-link:hover {
+            color: white;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .settings-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e8e8e8;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+            margin-left: 10px;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 2px solid #a7f3d0;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 2px solid #fecaca;
+        }
+
+        .alert-info {
+            background: #e0f2fe;
+            color: #0369a1;
+            border: 2px solid #bae6fd;
+        }
+
+        .info-box {
+            background: #e0f2fe;
+            border: 2px solid #bae6fd;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .info-box h4 {
+            color: #0369a1;
+            margin-bottom: 10px;
+        }
+
+        .info-box ul {
+            color: #0369a1;
+            margin-left: 20px;
+        }
+
+        .info-box li {
+            margin-bottom: 5px;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .status-enabled {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-disabled {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .form-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e8e8e8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="{{ url_for('dashboard') }}" class="back-link">← Back to Dashboard</a>
+            <h1>📧 Email Settings</h1>
+            <p>Configure email notifications for your tasks</p>
+        </div>
+
+        <div class="content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="status-indicator {% if email_config.enabled %}status-enabled{% else %}status-disabled{% endif %}">
+                <span>{% if email_config.enabled %}✅{% else %}⚠️{% endif %}</span>
+                <span>Email notifications are {% if email_config.enabled %}enabled{% else %}disabled{% endif %}</span>
+            </div>
+
+            <div class="info-box">
+                <h4>📋 How Email Notifications Work</h4>
+                <ul>
+                    <li>Get notified about tasks due today when your system starts up</li>
+                    <li>Emails are sent every 30 minutes while your system is running</li>
+                    <li>Uses Gmail SMTP - you'll need an "App Password" (not your regular password)</li>
+                    <li>Only tasks due today that haven't been notified yet will trigger emails</li>
+                </ul>
+            </div>
+
+            <div class="settings-section">
+                <div class="section-title">Gmail SMTP Configuration</div>
+                
+                <form method="POST">
+                    <div class="form-group">
+                        <label for="email">Your Gmail Address</label>
+                        <input type="email" id="email" name="email" value="{{ email_config.email or '' }}" 
+                               placeholder="your-email@gmail.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">App Password (Not your regular Gmail password)</label>
+                        <input type="password" id="password" name="password" value="{{ email_config.password or '' }}" 
+                               placeholder="xxxx xxxx xxxx xxxx" required>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="enabled" name="enabled" {% if email_config.enabled %}checked{% endif %}>
+                            <label for="enabled">Enable email notifications</label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                        {% if email_config.email and email_config.password %}
+                            <a href="{{ url_for('test_email') }}" class="btn btn-success">Send Test Email</a>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+
+            <div class="info-box">
+                <h4>🔐 Setting up Gmail App Password</h4>
+                <ul>
+                    <li>Go to your <strong>Google Account settings</strong></li>
+                    <li>Enable <strong>2-Factor Authentication</strong> if not already enabled</li>
+                    <li>Go to <strong>Security → 2-Step Verification → App passwords</strong></li>
+                    <li>Generate a new app password for "Mail"</li>
+                    <li>Copy the 16-character password and paste it above</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
