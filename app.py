@@ -11,6 +11,13 @@ import threading
 import time
 from datetime import datetime, timedelta
 
+if os.environ.get('RAILWAY_ENVIRONMENT') or os.environ.get('RENDER'):
+    DATABASE = os.path.join(os.getcwd(), 'todos.db')
+else:
+    DATABASE = 'todos.db'
+
+print(f"Database path: {DATABASE}")
+
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
 
