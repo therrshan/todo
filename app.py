@@ -11,18 +11,17 @@ import threading
 import time
 from datetime import datetime, timedelta
 
-if os.environ.get('RAILWAY_ENVIRONMENT') or os.environ.get('RENDER'):
-    DATABASE = os.path.join(os.getcwd(), 'todos.db')
-else:
-    DATABASE = 'todos.db'
-
-print(f"Database path: {DATABASE}")
-
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
 
 # Your secret password - change this to whatever you want
 SECRET_PASSWORD = "opensesame"
+
+# Database setup - Railway compatible
+DATABASE = os.path.join(os.getcwd(), 'data', 'todos.db')
+
+# Ensure data directory exists
+os.makedirs(os.path.dirname(DATABASE), exist_ok=True)
 
 # Email configuration - now stored in database
 def get_email_config():
@@ -69,9 +68,6 @@ def save_email_config(email, password, enabled):
     
     conn.commit()
     conn.close()
-
-# Database setup
-DATABASE = 'todos.db'
 
 def init_db():
     """Initialize the database with all required tables"""
@@ -169,14 +165,35 @@ def get_db_connection():
     return conn
 
 def send_email_notification(subject, body, to_email=None):
-    """Send email notification"""
+    """Send email notification with enhanced debugging"""
     email_config = get_email_config()
     
-    if not email_config['enabled'] or not email_config['email']:
-        print(f"Email disabled or not configured. Would send: {subject}")
+    print(f"DEBUG: Email config check:")
+    print(f"  - Email: {email_config['email']}")
+    print(f"  - Password set: {'Yes' if email_config['password'] else 'No'}")
+    print(f"  - Password length: {len(email_config['password']) if email_config['password'] else 0}")
+    print(f"  - Enabled: {email_config['enabled']}")
+    print(f"  - SMTP Server: {email_config['smtp_server']}")
+    print(f"  - SMTP Port: {email_config['smtp_port']}")
+    
+    if not email_config['enabled']:
+        print("EMAIL: Notifications disabled in settings")
+        return False
+        
+    if not email_config['email']:
+        print("EMAIL: No email address configured")
+        return False
+        
+    if not email_config['password']:
+        print("EMAIL: No email password configured")
         return False
     
     try:
+        print(f"EMAIL: Attempting to send email...")
+        print(f"EMAIL: From: {email_config['email']}")
+        print(f"EMAIL: To: {to_email or email_config['email']}")
+        print(f"EMAIL: Subject: {subject}")
+        
         # Create message
         msg = MIMEMultipart()
         msg['From'] = email_config['email']
@@ -186,18 +203,43 @@ def send_email_notification(subject, body, to_email=None):
         # Add body to email
         msg.attach(MIMEText(body, 'html'))
         
-        # Gmail SMTP configuration
+        print(f"EMAIL: Connecting to {email_config['smtp_server']}:{email_config['smtp_port']}")
+        
+        # Gmail SMTP configuration with enhanced error handling
         server = smtplib.SMTP(email_config['smtp_server'], email_config['smtp_port'])
+        server.set_debuglevel(1)  # Enable SMTP debugging
+        
+        print("EMAIL: Starting TLS...")
         server.starttls()
+        
+        print("EMAIL: Attempting login...")
         server.login(email_config['email'], email_config['password'])
+        
+        print("EMAIL: Sending message...")
         text = msg.as_string()
         server.sendmail(email_config['email'], to_email or email_config['email'], text)
+        
+        print("EMAIL: Closing connection...")
         server.quit()
         
-        print(f"Email sent successfully: {subject}")
+        print(f"EMAIL: Successfully sent: {subject}")
         return True
+        
+    except smtplib.SMTPAuthenticationError as e:
+        print(f"EMAIL: Authentication failed - {e}")
+        print("EMAIL: Check your Gmail App Password!")
+        return False
+    except smtplib.SMTPConnectError as e:
+        print(f"EMAIL: Connection failed - {e}")
+        print("EMAIL: Railway might be blocking SMTP ports")
+        return False
+    except smtplib.SMTPException as e:
+        print(f"EMAIL: SMTP error - {e}")
+        return False
     except Exception as e:
-        print(f"Failed to send email: {e}")
+        print(f"EMAIL: Unexpected error - {e}")
+        import traceback
+        traceback.print_exc()
         return False
 
 def check_due_tasks():
@@ -778,17 +820,24 @@ def settings():
 @app.route('/test_email')
 @login_required
 def test_email():
-    """Test email functionality"""
+    """Test email functionality with detailed feedback"""
+    print("=" * 50)
+    print("STARTING EMAIL TEST")
+    print("=" * 50)
+    
     config = get_email_config()
-    print(f"DEBUG: Email config - Email: {config['email']}, Password: {'*' * len(config['password']) if config['password'] else 'EMPTY'}, Enabled: {config['enabled']}")
     
     if send_email_notification(
-        "📧 Test Email from Todo App", 
-        "<h2>Email notifications are working!</h2><p>This is a test email from your Todo app.</p>"
+        "🔧 Test Email from Todo App", 
+        "<h2>Email notifications are working!</h2><p>This is a test email from your Todo app running on Railway.</p>"
     ):
         flash('Test email sent successfully! 📧', 'success')
     else:
-        flash('Failed to send test email. Check your settings.', 'error')
+        flash('Failed to send test email. Check the Railway logs for detailed error info.', 'error')
+    
+    print("=" * 50)
+    print("EMAIL TEST COMPLETED")
+    print("=" * 50)
     
     return redirect(url_for('settings'))
 
@@ -810,6 +859,7 @@ def debug_email():
 
 if __name__ == '__main__':
     try:
+        print(f"Database path: {DATABASE}")
         print("Starting todo app...")
         init_db()
         print("Database initialized successfully")
@@ -822,8 +872,10 @@ if __name__ == '__main__':
         start_scheduler()
         print("Email scheduler started")
         
-        print("Starting Flask app on port 5000...")
-        app.run(host='0.0.0.0', port=5000, debug=False)
+        # Railway sets PORT environment variable
+        port = int(os.environ.get('PORT', 5000))
+        print(f"Starting Flask app on port {port}...")
+        app.run(host='0.0.0.0', port=port, debug=False)
     except Exception as e:
         print(f"ERROR starting app: {e}")
         import traceback
